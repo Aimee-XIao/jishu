@@ -257,13 +257,13 @@
 				console.log(oldData);	
 				for(var i=0, row; i < oldData.length; i++){
 					row = oldData[i];
-					if(!row.type){
-						layer.msg("检查每一行，请选择分类！", { icon: 5 }); //提示
+					if(!row.type||!row.name){
+						layer.msg("检查每一行，请填写有效数据！", { icon: 5 }); //提示
 						return;
 					}
 				}
-        localStorage.setItem("oldData",JSON.stringify(table.cache[layTableId], null, 2));
-				document.getElementById("jsonResult").innerHTML = JSON.stringify(table.cache[layTableId], null, 2);	//使用JSON.stringify() 格式化输出JSON字符串		
+        localStorage.setItem("oldData",JSON.stringify(table.cache[layTableId]));
+        console.log(JSON.stringify(table.cache[layTableId]))
 			}
 		}
 		
@@ -315,7 +315,15 @@
 					layer.confirm('真的删除行么？', function(index){
 					  obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
 					  layer.close(index);
+           
 					  activeByType('removeEmptyTableCache');
+            console.log('------',obj.data)
+            for(let i=0;i<viewObj.tbData.length;i++){
+              if(viewObj.tbData[i].type==obj.data.type){
+                viewObj.tbData.splice(i,1)
+              }
+            }
+            localStorage.setItem("oldData",JSON.stringify(viewObj.tbData));
 					});
 					break;						
 			}
